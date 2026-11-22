@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sprechen Trainer · Prüfung 3.12</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Segoe UI', system-ui, sans-serif; background:#0f172a; color:#e2e8f0; line-height:1.6; }
+  header { background:linear-gradient(135deg,#1e3a8a,#7c3aed); padding:2rem 1rem; text-align:center; }
+  header h1 { font-size:1.8rem; }
+  header p { opacity:.85; margin-top:.3rem; }
+  nav { display:flex; justify-content:center; gap:.5rem; flex-wrap:wrap; background:#1e293b; padding:.7rem; position:sticky; top:0; z-index:10; }
+  nav button { background:#334155; color:#e2e8f0; border:none; padding:.6rem 1.2rem; border-radius:999px; cursor:pointer; font-size:1rem; }
+  nav button.active { background:#818cf8; color:#1e1b4b; font-weight:600; }
+  main { max-width:900px; margin:0 auto; padding:1.5rem 1rem; }
+  .card { background:#1e293b; border-radius:14px; padding:1.3rem; margin-bottom:1.2rem; box-shadow:0 2px 8px rgba(0,0,0,.3); }
+  h2 { color:#a5b4fc; margin-bottom:.8rem; font-size:1.3rem; }
+  .big { width:100%; padding:1rem; font-size:1.2rem; border:none; border-radius:12px; background:linear-gradient(135deg,#7c3aed,#db2777); color:white; cursor:pointer; font-weight:600; }
+  .big:hover { opacity:.9; }
+  .timer { font-size:3rem; text-align:center; font-variant-numeric:tabular-nums; margin:.5rem 0; }
+  .timer.prep { color:#fbbf24; } .timer.speak { color:#34d399; }
+  .phase { text-align:center; font-weight:600; margin-bottom:.3rem; }
+  .row { display:flex; gap:.5rem; justify-content:center; flex-wrap:wrap; }
+  .small { padding:.5rem 1rem; border:none; border-radius:8px; cursor:pointer; background:#334155; color:#e2e8f0; }
+  .imgcard { border-left:4px solid #818cf8; }
+  .imgcard h3 { color:#fbbf24; }
+  .kw { background:#334155; border-radius:8px; padding:.5rem .8rem; margin:.5rem 0; cursor:pointer; }
+  .hidden { filter:blur(6px); transition:filter .3s; }
+  .hidden:hover { filter:blur(3px); }
+  .revealed { color:#93c5fd; font-style:italic; }
+  .frage { color:#f9a8d4; margin-top:.4rem; }
+  .de { color:#93c5fd; } .fr { color:#94a3b8; font-size:.9em; }
+  table { width:100%; border-collapse:collapse; margin:.5rem 0; }
+  td { border-bottom:1px solid #334155; padding:.45rem .4rem; vertical-align:top; }
+  .warn { background:#7f1d1d; border-radius:10px; padding:.8rem 1rem; margin-bottom:1rem; }
+  footer { text-align:center; padding:2rem; opacity:.5; font-size:.85rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>🗣️ Sprechen Trainer</h1>
+  <p>Mündliche Prüfung · jeudi 3 décembre · groupe de 3 · ~2 min de parole</p>
+</header>
+<nav>
+  <button class="tabBtn active" data-tab="tirage">🎲 Tirage</button>
+  <button class="tabBtn" data-tab="fiches">📝 Fiches</button>
+  <button class="tabBtn" data-tab="phrases">💬 Phrases</button>
+  <button class="tabBtn" data-tab="exam">📋 Consignes</button>
+</nav>
+<main>
+
+<section id="tirage">
+  <div class="card">
+    <h2>🎲 Tirage au sort</h2>
+    <p>Comme le jour J : une image tirée au sort, 5 minutes de préparation (mots-clés seulement !), puis 2 minutes de parole.</p>
+    <div class="row" style="margin-top:1rem">
+      <button class="big" id="drawBtn">🎯 Tirer une image</button>
+    </div>
+  </div>
+  <div class="card" id="drawCard" style="display:none">
+    <div class="phase" id="phaseLabel"></div>
+    <div class="timer prep" id="timerDisplay">5:00</div>
+    <div class="row">
+      <button class="small" id="startBtn">▶ Démarrer la préparation (5 min)</button>
+      <button class="small" id="speakBtn" style="display:none">🗣️ C'est parti, 2 min !</button>
+      <button class="small" id="resetBtn">↺ Réinitialiser</button>
+    </div>
+    <div id="drawResult" style="margin-top:1rem"></div>
+  </div>
+</section>
+
+<section id="fiches" style="display:none">
+  <div class="card">
+    <h2>📝 Les 10 fiches mots-clés</h2>
+    <p>Clique sur une zone floutée pour la révéler. Entraîne-toi d'abord <b>sans regarder</b> : décris l'image à voix haute, puis vérifie avec la fiche. Rappel : le jour J, seuls les mots-clés sont autorisés !</p>
+  </div>
+  <div id="fichesList"></div>
+</section>
+
+<section id="phrases" style="display:none">
+  <div class="card">
+    <h2>✨ Phrases passe-partout</h2>
+    <h3 style="color:#fbbf24;margin-bottom:.5rem">Pour commencer</h3>
+    <table>
+      <tr><td class="de">Auf dem Bild sehe ich…</td><td class="fr">Sur l'image je vois…</td></tr>
+      <tr><td class="de">Das Bild zeigt…</td><td class="fr">L'image montre…</td></tr>
+    </table>
+    <h3 style="color:#fbbf24;margin:.8rem 0 .5rem">Pour décrire</h3>
+    <table>
+      <tr><td class="de">Links / rechts / in der Mitte</td><td class="fr">à gauche / à droite / au milieu</td></tr>
+      <tr><td class="de">Im Vordergrund / im Hintergrund</td><td class="fr">au premier plan / à l'arrière-plan</td></tr>
+      <tr><td class="de">Es gibt… / Die Person trägt…</td><td class="fr">il y a… / la personne porte…</td></tr>
+      <tr><td class="de">Vielleicht… / Ich glaube…</td><td class="fr">peut-être… / je pense…</td></tr>
+      <tr><td class="de">Das sieht … aus / Er sieht glücklich aus</td><td class="fr">ça a l'air… / il a l'air content (⚠️ pas « schade » : ça veut dire « dommage »)</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>💡 Opinion &amp; interaction ⭐</h2>
+    <table>
+      <tr><td class="de">Ich finde das (sehr) interessant, weil…</td><td class="fr">je trouve ça très intéressant, parce que…</td></tr>
+      <tr><td class="de">Ich mag dieses Bild, weil…</td><td class="fr">j'aime cette image, parce que…</td></tr>
+      <tr><td class="de">Meiner Meinung nach…</td><td class="fr">à mon avis…</td></tr>
+      <tr><td class="de">Und du? Was denkst du?</td><td class="fr">Et toi ? Qu'en penses-tu ? (points d'Interaction !)</td></tr>
+      <tr><td class="de">Ja, das finde ich auch!</td><td class="fr">Oui, je le pense aussi !</td></tr>
+      <tr><td class="de">Wirklich? Ich denke…</td><td class="fr">Ah bon ? Moi je pense…</td></tr>
+      <tr><td class="de">Das erinnert mich an…</td><td class="fr">ça me rappelle… (gain de temps facile)</td></tr>
+      <tr><td class="de">Also, ich meine…</td><td class="fr">donc, je veux dire… (pour reformuler)</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>🆘 Phrases SOS</h2>
+    <table>
+      <tr><td class="de">Kannst du das bitte wiederholen?</td><td class="fr">Peux-tu répéter, s'il te plaît ?</td></tr>
+      <tr><td class="de">Wie sagt man … auf Deutsch?</td><td class="fr">Comment dit-on … en allemand ?</td></tr>
+      <tr><td class="de">Einen Moment, bitte.</td><td class="fr">Un instant, s'il te plaît.</td></tr>
+    </table>
+  </div>
+</section>
+
+<section id="exam" style="display:none">
+  <div class="warn">⚠️ Pendant les 5 minutes de préparation, tu ne peux écrire que des <b>mots-clés</b>, <b>pas de phrases entières</b> (keine ganzen Sätze) !</div>
+  <div class="card">
+    <h2>📋 Le déroulement</h2>
+    <ul style="margin-left:1.2rem">
+      <li>Jeudi 3.12 · groupes de 15 min · 3 personnes</li>
+      <li>5 minutes de préparation (papier + stylo, mots-clés seulement)</li>
+      <li>Images tirées au sort (Bilder werden ausgelost)</li>
+      <li>~2 minutes de parole par personne, en Gruppengespräch</li>
+      <li>Tes notes sont autorisées pendant la parole</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h2>🎯 La notation (sur 40)</h2>
+    <table>
+      <tr><td><b>Erfüllung</b> /8</td><td class="fr">tu réponds à la tâche : décrire + opinion + lien avec ta vie</td></tr>
+      <tr><td><b>Interaktion</b> /8</td><td class="fr">tu réagis aux autres, poses des questions, ne restes pas silencieux·se</td></tr>
+      <tr><td><b>Wortschatz, Register</b> /8</td><td class="fr">vocabulaire varié et adapté</td></tr>
+      <tr><td><b>Strukturen</b> /8</td><td class="fr">grammaire : verbes, weil, deshalb…</td></tr>
+      <tr><td><b>Aussprache</b> /8</td><td class="fr">prononciation : ch (ich), ü, ö, r</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h2>🏆 Plan jusqu'au 3.12</h2>
+    <ul style="margin-left:1.2rem">
+      <li><b>Semaine 1 :</b> phrases passe-partout + fiches mots-clés (3-4 images/jour) + anecdotes perso</li>
+      <li><b>Week-end :</b> textes à voix haute, s'enregistrer, corriger la prononciation</li>
+      <li><b>Lun 30.11 :</b> simulation seule (tirage → 5 min → 2 min)</li>
+      <li><b>Mar 1.12 :</b> simulation à 3 avec des camarades</li>
+      <li><b>Mer 2.12 :</b> répétition légère, bonne nuit de sommeil 😴</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+<footer>Sprechen Trainer · Prüfung am 3.12.26 · Viel Erfolg ! 🍀</footer>
+<script>
+var IMAGES = [
+  {emoji:"🎿🧗", title:"1 · Skieur + escalade", desc:"À gauche un grimpeur sur un mur d'escalade, à droite un skieur dans la neige.", kw:"zwei Personen · links / rechts · klettern · Ski fahren · Berge · Schnee · Jacke, Helm · Sport = gesund", texte:"Auf dem Bild sehe ich zwei Personen. Links klettert eine Person an einer Kletterwand. Rechts fährt ein Mann Ski in den Bergen. Er trägt eine rote Jacke und einen Helm. Beide machen Sport. Ich finde Sport wichtig, weil er gesund ist.", frage:"Und ihr? Welchen Sport macht ihr gern?"},
+  {emoji:"🎨", title:"2 · L'homme et la femme", desc:"Un homme en pull jaune avec un objet rouge, une femme rousse avec un objet rose (collage).", kw:"Mann · gelber Pullover · rote Haare · etwas Rotes / Rosas · Geschenk? · lustig", texte:"Das Bild zeigt einen Mann und eine Frau. Der Mann trägt einen gelben Pullover und hat etwas Rotes in der Hand. Die Frau hat rote Haare. Vielleicht sind sie Freunde. Ich finde das Bild lustig.", frage:"Was schenkt ihr euren Freunden?"},
+  {emoji:"🏐", title:"3 · Le volley-ball", desc:"Un match de volley en salle, un joueur au premier plan avec le ballon.", kw:"Volleyballspiel · Turnhalle · Ball · Team spielen · spannend", texte:"Das Bild zeigt ein Volleyballspiel in der Turnhalle. Ein Spieler hält den Ball. Hinten spielen andere Personen. Das Spiel sieht spannend aus. Ich spiele auch gern Volleyball.", frage:"Spielt ihr auch Volleyball?"},
+  {emoji:"🛍️", title:"4 · En ville avec des sacs", desc:"Deux personnes marchent en ville, avec des sacs.", kw:"zwei Personen · Stadt · Taschen · einkaufen · teuer", texte:"Auf dem Bild gehen zwei Personen in der Stadt spazieren. Sie tragen Taschen. Vielleicht gehen sie einkaufen. Ich gehe auch gern einkaufen, aber es ist teuer.", frage:"Was kauft ihr gern ein?"},
+  {emoji:"🛋️", title:"5 · Sur le canapé", desc:"Deux femmes assises sur un canapé gris, tenues décontractées, coussin orange.", kw:"zwei Frauen · Sofa · zu Hause · gemütlich · entspannen", texte:"Das Bild zeigt zwei Frauen. Sie sitzen auf einem Sofa. Sie sind vielleicht zu Hause. Der Raum ist bunt und schön. Ich finde das Bild gemütlich. Zuhause entspanne ich auch gern.", frage:"Was macht ihr gern zu Hause?"},
+  {emoji:"🖼️", title:"6 · Au musée", desc:"Deux femmes dans un musée devant une œuvre, l'une montre du doigt.", kw:"Museum · Kunst · zeigen · interessant · ruhig", texte:"Auf dem Bild sind zwei Frauen in einem Museum. Sie sehen sich Kunst an. Eine Frau zeigt auf ein Bild. Ich finde Kunst schön, aber manchmal langweilig. Ich gehe nicht oft ins Museum.", frage:"Geht ihr gern ins Museum?"},
+  {emoji:"🚌", title:"7 · Devant le bus", desc:"Six personnes avec des valises devant un bus, elles sourient.", kw:"sechs Personen · Koffer · Bus · Reise · fröhlich", texte:"Das Bild zeigt sechs Personen mit Koffern. Sie warten vielleicht auf einen Bus. Sie machen eine Reise zusammen. Ich reise auch gern, weil man neue Städte sieht.", frage:"Wohin reist ihr gern?"},
+  {emoji:"✏️", title:"8 · En classe", desc:"Une enseignante discute avec des élèves autour d'une table : cahiers, stylo, tablette.", kw:"Klassenzimmer · Lehrerin · Schüler · Bücher · Hefte · anstrengend · Lieblingsfächer", texte:"Auf dem Bild ist ein Klassenzimmer. Die Lehrerin spricht mit den Schülern. Auf dem Tisch gibt es Bücher und Hefte. Ich finde Schule wichtig, aber manchmal anstrengend.", frage:"Was sind eure Lieblingsfächer?"},
+  {emoji:"📚", title:"9 · Travailler à quatre", desc:"Quatre jeunes autour d'une table, cahiers ouverts, travaux ensemble.", kw:"vier junge Leute · zusammen arbeiten · Hausaufgaben · Teamarbeit", texte:"Das Bild zeigt vier junge Leute. Sie arbeiten zusammen am Tisch. Sie machen Hausaufgaben oder lernen für eine Prüfung. Teamarbeit ist gut, weil man zusammen mehr lernt.", frage:"Lernt ihr lieber allein oder mit Freunden?"},
+  {emoji:"🛹", title:"10 · La bibliothèque", desc:"Une fille rit avec un skateboard dans une bibliothèque, d'autres lisent derrière.", kw:"Bibliothek · Skateboard · lachen · fröhlich · lesen", texte:"Auf dem Bild ist eine Bibliothek. Eine Frau hat ein Skateboard und lacht. Sie ist fröhlich. Hinten lesen andere Personen Bücher. Ich lese gern, aber ich fahre nicht Skateboard.", frage:"Wollt ihr Skateboard fahren?"}
+];
+var current = -1, timerId = null, mode = 'prep', seconds = 300;
+
+function fmt(s){ var m = Math.floor(s/60), r = s%60; return m + ':' + (r<10?'0':'') + r; }
+
+function imgCard(o, idx){
+  var h = '<div class="card imgcard" id="fiche' + idx + '">';
+  h += '<h3>' + o.emoji + ' ' + o.title + '</h3>';
+  h += '<p style="opacity:.8">' + o.desc + '</p>';
+  h += '<div class="kw"><b>Mots-clés :</b><br><span class="reveal hidden">' + o.kw + '</span><br><span class="revealed" style="display:none">' + o.kw + '</span></div>';
+  h += '<div class="kw"><b>Texte modèle (pour t' + "'" + 'entraîner à voix haute) :</b><br><span class="de reveal hidden">' + o.texte + '</span><br><span class="revealed" style="display:none">' + o.texte + '</span></div>';
+  h += '<p class="frage">💬 ' + o.frage + '</p></div>';
+  return h;
+}
+
+document.getElementById('fichesList').innerHTML = IMAGES.map(imgCard).join('');
+
+for (var i = 0; i < IMAGES.length; i++) {
+  (function(idx){
+    var card = document.getElementById('fiche' + idx);
+    card.addEventListener('click', function(ev){
+      var t = ev.target;
+      if (t.classList.contains('reveal') || t.classList.contains('revealed')) return;
+      var hid = card.querySelector('.hidden'), rev = card.querySelectorAll('.revealed');
+      if (hid.style.display !== 'none') { hid.style.display='none'; for(var k=0;k<rev.length;k++){rev[k].style.display='inline';} }
+    });
+  })(i);
+}
+
+document.getElementById('drawBtn').addEventListener('click', function(){
+  current = Math.floor(Math.random() * IMAGES.length);
+  var o = IMAGES[current];
+  document.getElementById('drawCard').style.display = 'block';
+  document.getElementById('drawResult').innerHTML = '<div class="card imgcard"><h3>' + o.emoji + ' ' + o.title + '</h3><p>' + o.desc + '</p><p style="margin-top:.6rem;opacity:.7">Notes tes mots-clés sur papier, puis clique sur les boutons du chrono !</p></div>';
+  stopTimer(); mode='prep'; seconds=300;
+  document.getElementById('phaseLabel').innerHTML = '📝 Préparation (mots-clés seulement !)';
+  document.getElementById('timerDisplay').className = 'timer prep';
+  document.getElementById('timerDisplay').textContent = '5:00';
+  document.getElementById('startBtn').style.display='inline-block';
+  document.getElementById('speakBtn').style.display='none';
+  document.getElementById('drawCard').scrollIntoView({behavior:'smooth'});
+});
+
+function stopTimer(){ if (timerId) { clearInterval(timerId); timerId = null; } }
+
+document.getElementById('startBtn').addEventListener('click', function(){
+  stopTimer(); seconds = 300; mode='prep';
+  document.getElementById('phaseLabel').innerHTML = '📝 Préparation';
+  timerId = setInterval(function(){
+    seconds--;
+    if (seconds < 0) { stopTimer(); document.getElementById('phaseLabel').innerHTML='⏰ Préparation terminée !'; var d=new Date(); return; }
+    document.getElementById('timerDisplay').textContent = fmt(seconds);
+  }, 1000);
+  document.getElementById('speakBtn').style.display='inline-block';
+});
+
+document.getElementById('speakBtn').addEventListener('click', function(){
+  stopTimer(); seconds = 120; mode='speak';
+  document.getElementById('phaseLabel').innerHTML = '🗣️ Sprechzeit ! Parle 2 minutes';
+  document.getElementById('timerDisplay').className = 'timer speak';
+  timerId = setInterval(function(){
+    seconds--;
+    if (seconds < 0) { stopTimer(); document.getElementById('phaseLabel').innerHTML='🎉 Terminé, gut gemacht !'; document.getElementById('timerDisplay').textContent='0:00'; return; }
+    document.getElementById('timerDisplay').textContent = fmt(seconds);
+  }, 1000);
+});
+
+document.getElementById('resetBtn').addEventListener('click', function(){
+  stopTimer(); seconds = 300; mode='prep';
+  document.getElementById('phaseLabel').innerHTML='';
+  document.getElementById('timerDisplay').className='timer prep';
+  document.getElementById('timerDisplay').textContent='5:00';
+  document.getElementById('startBtn').style.display='inline-block';
+  document.getElementById('speakBtn').style.display='none';
+});
+
+var tabs = document.querySelectorAll('.tabBtn');
+for (var j = 0; j < tabs.length; j++) {
+  tabs[j].addEventListener('click', function(){
+    for (var k=0;k<tabs.length;k++){ tabs[k].classList.remove('active'); }
+    this.classList.add('active');
+    var sections = ['tirage','fiches','phrases','exam'];
+    for (var m=0;m<sections.length;m++){ document.getElementById(sections[m]).style.display='none'; }
+    document.getElementById(this.dataset.tab).style.display='block';
+  });
+}
+</script>
+</body>
+</html>
